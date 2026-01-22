@@ -53,6 +53,7 @@ function AppRoutes() {
       <Route path="/cases/:id" element={<PrivateRoute><CaseDetails /></PrivateRoute>} />
       <Route path="/documents" element={<PrivateRoute><Documents /></PrivateRoute>} />
       <Route path="/invoices" element={<PrivateRoute><Invoices /></PrivateRoute>} />
+      <Route path="/invoices/:id" element={<PrivateRoute><InvoiceDetails /></PrivateRoute>} />
       <Route path="/ai-assistant" element={<PrivateRoute><AIAssistant /></PrivateRoute>} />
       <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
       <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
