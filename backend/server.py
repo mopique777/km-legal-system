@@ -238,6 +238,10 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     except Exception as e:
         raise HTTPException(status_code=401, detail="Invalid token")
 
+@api_router.get("/")
+async def root():
+    return {"message": "LegalCore API is running", "status": "ok"}
+
 @api_router.post("/auth/register")
 async def register(user_data: UserCreate):
     existing = await db.users.find_one({"email": user_data.email})
