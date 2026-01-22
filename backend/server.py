@@ -597,7 +597,16 @@ async def get_templates(type: Optional[str] = None, user: User = Depends(get_cur
 @api_router.post("/ai/chat")
 async def ai_chat(request: AIRequest, user: User = Depends(get_current_user)):
     try:
-        api_key = os.getenv("EMERGENT_LLM_KEY")
+        # Check for user's custom API keys first
+        keys_doc = await db.api_keys.find_one({"user_id": user.id}, {"_id": 0})
+        
+        if request.provider == "openai" and keys_doc and keys_doc.get("openai_key"):
+            api_key = keys_doc.get("openai_key")
+        elif request.provider == "gemini" and keys_doc and keys_doc.get("gemini_key"):
+            api_key = keys_doc.get("gemini_key")
+        else:
+            # Fallback to Emergent LLM Key
+            api_key = os.getenv("EMERGENT_LLM_KEY")
         
         system_message = """
 أنت مساعد قانوني متخصص في القانون الإماراتي. يجب عليك:
