@@ -10,6 +10,7 @@ const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, company, logout } = useAuth();
+  const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const menuItems = [
     { icon: LayoutDashboard, label: 'لوحة التحكم', path: '/dashboard', testId: 'dashboard-link' },
@@ -23,6 +24,11 @@ const Sidebar = () => {
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const handleNavigate = (path) => {
+    navigate(path);
+    setMobileOpen(false);
   };
 
   const SidebarContent = () => (
