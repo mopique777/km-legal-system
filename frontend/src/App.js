@@ -9,6 +9,7 @@ import Cases from './pages/Cases';
 import CaseDetails from './pages/CaseDetails';
 import Documents from './pages/Documents';
 import Invoices from './pages/Invoices';
+import InvoiceDetails from './pages/InvoiceDetails';
 import AIAssistant from './pages/AIAssistant';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
