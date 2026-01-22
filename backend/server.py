@@ -787,10 +787,12 @@ async def get_api_keys(user: User = Depends(get_current_user)):
 @api_router.post("/settings/api-keys")
 async def save_api_keys(keys_data: dict, user: User = Depends(get_current_user)):
     allowed_keys = ["openai_key", "gemini_key", "google_drive_client_id", "google_drive_client_secret"]
-    update_data = {k: v for k, v in keys_data.items() if k in allowed_keys and v}
+    update_data = {k: v for k, v in keys_data.items() if k in allowed_keys and v and str(v).strip()}
     
     if not update_data:
-        raise HTTPException(status_code=400, detail="No valid keys provided")
+        # لا توجد مفاتيح للحفظ - حذف المفاتيح القديمة إن وجدت
+        await db.api_keys.delete_one({"user_id": user.id})
+        return {"message": "No keys to save, will use Emergent LLM Key"}
     
     update_data["user_id"] = user.id
     update_data["updated_at"] = datetime.now(timezone.utc).isoformat()
