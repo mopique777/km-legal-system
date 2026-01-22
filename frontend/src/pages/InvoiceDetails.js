@@ -126,18 +126,33 @@ const InvoiceDetails = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+    if (!invoice || !invoice.case_id) {
+      toast.error('معلومات الفاتورة غير كاملة');
+      return;
+    }
+
     try {
       const updatePayload = {
-        ...formData,
+        type: formData.type,
         amount: parseFloat(formData.amount),
-        vat_percentage: parseFloat(formData.vat_percentage)
+        vat_percentage: parseFloat(formData.vat_percentage),
+        description_ar: formData.description_ar,
+        due_date: formData.due_date,
+        status: formData.status
       };
+      
+      // Validate data
+      if (isNaN(updatePayload.amount) || updatePayload.amount <= 0) {
+        toast.error('المبلغ غير صحيح');
+        return;
+      }
       
       await api.put(`/invoices/${id}`, updatePayload);
       toast.success('تم تحديث الفاتورة بنجاح');
       setEditing(false);
       fetchInvoice();
     } catch (error) {
+      console.error('Update error:', error);
       toast.error(error.response?.data?.detail || 'فشل تحديث الفاتورة');
     }
   };
