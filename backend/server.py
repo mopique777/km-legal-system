@@ -305,6 +305,21 @@ async def get_me(user: User = Depends(get_current_user)):
         "company": company.model_dump() if company else None
     }
 
+@api_router.put("/users/{user_id}")
+async def update_user(user_id: str, update_data: dict, current_user: User = Depends(get_current_user)):
+    if current_user.id != user_id and current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    allowed_fields = ["full_name_ar", "full_name_en", "avatar_url"]
+    update_fields = {k: v for k, v in update_data.items() if k in allowed_fields}
+    
+    if not update_fields:
+        raise HTTPException(status_code=400, detail="No valid fields to update")
+    
+    await db.users.update_one({"id": user_id}, {"$set": update_fields})
+    updated = await db.users.find_one({"id": user_id}, {"_id": 0})
+    return User(**updated)
+
 @api_router.post("/companies")
 async def create_company(company_data: CompanyCreate, user: User = Depends(get_current_user)):
     if user.role != "admin":
