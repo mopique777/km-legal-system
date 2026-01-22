@@ -281,15 +281,34 @@ const Settings = () => {
                     </p>
                   </div>
 
-                  <Button
-                    type="submit"
-                    disabled={loadingKeys}
-                    className="w-full bg-[#D4AF37] text-black hover:bg-[#B5952F]"
-                    data-testid="save-api-keys-button"
-                  >
-                    <Save className="w-5 h-5 ml-2" />
-                    {loadingKeys ? 'جاري الحفظ...' : 'حفظ مفاتيح API'}
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      type="submit"
+                      disabled={loadingKeys}
+                      className="flex-1 bg-[#D4AF37] text-black hover:bg-[#B5952F]"
+                      data-testid="save-api-keys-button"
+                    >
+                      <Save className="w-5 h-5 ml-2" />
+                      {loadingKeys ? 'جاري الحفظ...' : 'حفظ مفاتيح API'}
+                    </Button>
+                    
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        setApiKeys({
+                          openai_key: '',
+                          gemini_key: '',
+                          google_drive_client_id: '',
+                          google_drive_client_secret: ''
+                        });
+                      }}
+                      variant="outline"
+                      className="border-white/10 text-white hover:bg-white/5"
+                      data-testid="clear-keys-button"
+                    >
+                      مسح الحقول
+                    </Button>
+                  </div>
                 </form>
               </CardContent>
             </Card>
