@@ -73,6 +73,19 @@ const Settings = () => {
     }
   };
 
+  const handleApiKeysSubmit = async (e) => {
+    e.preventDefault();
+    setLoadingKeys(true);
+    try {
+      await api.post('/settings/api-keys', apiKeys);
+      toast.success('تم حفظ مفاتيح API بنجاح');
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'فشل حفظ المفاتيح');
+    } finally {
+      setLoadingKeys(false);
+    }
+  };
+
   return (
     <div className="flex min-h-screen bg-[#0B0F19]" dir="rtl">
       <Sidebar />
