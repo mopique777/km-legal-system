@@ -516,8 +516,29 @@ const CaseDetails = () => {
 
             <TabsContent value="sessions" className="mt-6">
               <Card className="bg-[#111827] border-white/5">
-                <CardContent className="py-12 text-center">
-                  <p className="text-gray-400">لا توجد جلسات مسجلة</p>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-white" style={{ fontFamily: 'Cairo' }}>
+                      الجلسات والمواعيد
+                    </CardTitle>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button size="sm" className="bg-[#D4AF37] text-black hover:bg-[#B5952F]">
+                          <Plus className="w-4 h-4 ml-2" />
+                          إضافة جلسة
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="bg-[#111827] border-white/10" dir="rtl">
+                        <DialogHeader>
+                          <DialogTitle className="text-white text-right">إضافة جلسة جديدة</DialogTitle>
+                        </DialogHeader>
+                        <SessionForm caseId={id} onSuccess={() => window.location.reload()} />
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <CaseSessions caseId={id} />
                 </CardContent>
               </Card>
             </TabsContent>
