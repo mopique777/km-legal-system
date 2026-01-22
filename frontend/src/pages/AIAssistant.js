@@ -15,6 +15,7 @@ const AIAssistant = () => {
   const [conversationId, setConversationId] = useState(null);
   const [provider, setProvider] = useState('openai');
   const [model, setModel] = useState('gpt-5.2');
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
