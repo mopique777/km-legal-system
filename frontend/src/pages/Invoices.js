@@ -220,9 +220,9 @@ const Invoices = () => {
                   className="bg-[#111827] border-white/5 hover:border-[#D4AF37]/30 transition-colors"
                   data-testid={`invoice-item-${invoice.id}`}
                 >
-                  <CardHeader>
+                  <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
-                      <div className="flex-1">
+                      <div className="flex-1" onClick={() => navigate(`/invoices/${invoice.id}`)} className="cursor-pointer">
                         <CardTitle className="text-white text-xl mb-2" style={{ fontFamily: 'Cairo' }}>
                           {getTypeLabel(invoice.type)}
                         </CardTitle>
@@ -236,17 +236,30 @@ const Invoices = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="text-left">
-                        <div className="text-2xl font-bold text-[#D4AF37]" style={{ fontFamily: 'Manrope' }}>
-                          {invoice.total_amount.toFixed(2)} AED
+                      <div className="flex flex-col items-end gap-2">
+                        <div className="text-left">
+                          <div className="text-2xl font-bold text-[#D4AF37]" style={{ fontFamily: 'Manrope' }}>
+                            {invoice.total_amount.toFixed(2)} AED
+                          </div>
+                          <div className="text-sm text-gray-400">
+                            شامل ضريبة {invoice.vat_amount.toFixed(2)} AED
+                          </div>
                         </div>
-                        <div className="text-sm text-gray-400">
-                          شامل ضريبة {invoice.vat_amount.toFixed(2)} AED
-                        </div>
+                        <Button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/invoices/${invoice.id}`);
+                          }}
+                          size="sm"
+                          className="bg-[#D4AF37] text-black hover:bg-[#B5952F]"
+                          data-testid={`view-invoice-${invoice.id}`}
+                        >
+                          عرض التفاصيل
+                        </Button>
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent onClick={() => navigate(`/invoices/${invoice.id}`)} className="cursor-pointer">
                     {invoice.description_ar && (
                       <p className="text-gray-300 text-sm">{invoice.description_ar}</p>
                     )}
