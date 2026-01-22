@@ -18,7 +18,14 @@ const Settings = () => {
     primary_color: '#D4AF37',
     secondary_color: '#334155'
   });
+  const [apiKeys, setApiKeys] = useState({
+    openai_key: '',
+    gemini_key: '',
+    google_drive_client_id: '',
+    google_drive_client_secret: ''
+  });
   const [loading, setLoading] = useState(false);
+  const [loadingKeys, setLoadingKeys] = useState(false);
 
   useEffect(() => {
     if (company) {
@@ -30,7 +37,17 @@ const Settings = () => {
         secondary_color: company.secondary_color || '#334155'
       });
     }
+    fetchApiKeys();
   }, [company]);
+
+  const fetchApiKeys = async () => {
+    try {
+      const response = await api.get('/settings/api-keys');
+      setApiKeys(response.data);
+    } catch (error) {
+      console.error('Failed to fetch API keys');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
