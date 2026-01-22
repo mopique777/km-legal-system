@@ -13,6 +13,154 @@ import { ArrowRight, Save, Trash2, FileText, Plus, Download, DollarSign } from '
 import api from '../utils/api';
 import { toast } from 'sonner';
 
+// Component for Sessions
+const SessionForm = ({ caseId, onSuccess }) => {
+  const [formData, setFormData] = useState({
+    session_date: '',
+    session_time: '',
+    location: '',
+    notes_ar: '',
+    status: 'scheduled'
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await api.post('/sessions', { ...formData, case_id: caseId });
+      toast.success('تم إضافة الجلسة بنجاح');
+      onSuccess();
+    } catch (error) {
+      toast.error('فشل إضافة الجلسة');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label className="text-right text-gray-300">تاريخ الجلسة</Label>
+          <Input
+            type="date"
+            value={formData.session_date}
+            onChange={(e) => setFormData({...formData, session_date: e.target.value})}
+            className="bg-black/20 border-white/10 text-white"
+            required
+          />
+        </div>
+        <div>
+          <Label className="text-right text-gray-300">وقت الجلسة</Label>
+          <Input
+            type="time"
+            value={formData.session_time}
+            onChange={(e) => setFormData({...formData, session_time: e.target.value})}
+            className="bg-black/20 border-white/10 text-white"
+          />
+        </div>
+      </div>
+
+      <div>
+        <Label className="text-right text-gray-300">المكان</Label>
+        <Input
+          value={formData.location}
+          onChange={(e) => setFormData({...formData, location: e.target.value})}
+          className="bg-black/20 border-white/10 text-white text-right"
+          required
+        />
+      </div>
+
+      <div>
+        <Label className="text-right text-gray-300">ملاحظات</Label>
+        <Textarea
+          value={formData.notes_ar}
+          onChange={(e) => setFormData({...formData, notes_ar: e.target.value})}
+          className="bg-black/20 border-white/10 text-white text-right"
+          rows={3}
+        />
+      </div>
+
+      <Button type="submit" disabled={loading} className="w-full bg-[#D4AF37] text-black hover:bg-[#B5952F]">
+        {loading ? 'جاري الحفظ...' : 'إضافة الجلسة'}
+      </Button>
+    </form>
+  );
+};
+
+const CaseSessions = ({ caseId }) => {
+  const [sessions, setSessions] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchSessions();
+  }, [caseId]);
+
+  const fetchSessions = async () => {
+    try {
+      const response = await api.get(`/cases/${caseId}/sessions`);
+      setSessions(response.data);
+    } catch (error) {
+      console.error('Failed to fetch sessions');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case 'scheduled': return 'مجدولة';
+      case 'completed': return 'منتهية';
+      case 'cancelled': return 'ملغاة';
+      default: return status;
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'scheduled': return 'text-blue-500';
+      case 'completed': return 'text-green-500';
+      case 'cancelled': return 'text-red-500';
+      default: return 'text-gray-500';
+    }
+  };
+
+  if (loading) return <p className="text-gray-400 text-center py-8">جاري التحميل...</p>;
+  
+  if (sessions.length === 0) {
+    return <p className="text-gray-400 text-center py-8">لا توجد جلسات مسجلة</p>;
+  }
+
+  return (
+    <div className="space-y-3">
+      {sessions.map((session) => (
+        <div key={session.id} className="p-4 bg-white/5 rounded-lg border border-white/10">
+          <div className="flex items-start justify-between mb-3">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                <h4 className="text-white font-semibold">{session.location}</h4>
+                <span className={`text-sm ${getStatusColor(session.status)}`}>
+                  {getStatusLabel(session.status)}
+                </span>
+              </div>
+              <div className="flex items-center gap-4 text-sm text-gray-400">
+                <span>📅 {new Date(session.session_date).toLocaleDateString('ar-AE')}</span>
+                {session.session_time && (
+                  <span>🕐 {session.session_time}</span>
+                )}
+              </div>
+            </div>
+          </div>
+          {session.notes_ar && (
+            <p className="text-sm text-gray-300 mt-2">{session.notes_ar}</p>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
 // Component for Documents
 const CaseDocuments = ({ caseId }) => {
   const [documents, setDocuments] = useState([]);
