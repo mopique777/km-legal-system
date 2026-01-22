@@ -16,6 +16,7 @@ const Documents = () => {
   const [showDialog, setShowDialog] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [uploadData, setUploadData] = useState({
     case_id: '',
     title: ''
