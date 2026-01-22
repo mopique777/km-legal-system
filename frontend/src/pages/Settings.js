@@ -26,6 +26,7 @@ const Settings = () => {
   });
   const [loading, setLoading] = useState(false);
   const [loadingKeys, setLoadingKeys] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     if (company) {
