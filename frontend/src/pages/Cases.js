@@ -258,12 +258,11 @@ const Cases = () => {
                 <Card
                   key={caseItem.id}
                   className="bg-[#111827] border-white/5 hover:border-[#D4AF37]/30 transition-colors cursor-pointer"
-                  onClick={() => navigate(`/cases/${caseItem.id}`)}
                   data-testid={`case-item-${caseItem.id}`}
                 >
-                  <CardHeader>
+                  <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
-                      <div className="flex-1">
+                      <div className="flex-1" onClick={() => navigate(`/cases/${caseItem.id}`)}>
                         <CardTitle className="text-white text-xl mb-2" style={{ fontFamily: 'Cairo' }}>
                           {caseItem.title_ar}
                         </CardTitle>
@@ -277,9 +276,22 @@ const Cases = () => {
                           </span>
                         </div>
                       </div>
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/cases/${caseItem.id}`);
+                          }}
+                          size="sm"
+                          className="bg-[#D4AF37] text-black hover:bg-[#B5952F]"
+                          data-testid={`view-case-${caseItem.id}`}
+                        >
+                          عرض
+                        </Button>
+                      </div>
                     </div>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent onClick={() => navigate(`/cases/${caseItem.id}`)}>
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
                         <span className="text-gray-400">المحكمة: </span>
@@ -292,6 +304,10 @@ const Cases = () => {
                       <div>
                         <span className="text-gray-400">المدعى عليه: </span>
                         <span className="text-white">{caseItem.defendant}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-400">الحالة: </span>
+                        <span className="text-white">{caseItem.status === 'active' ? 'نشطة' : 'مغلقة'}</span>
                       </div>
                     </div>
                   </CardContent>
