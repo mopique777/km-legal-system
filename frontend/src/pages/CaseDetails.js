@@ -374,16 +374,26 @@ const CaseDetails = () => {
 
             <TabsContent value="documents" className="mt-6">
               <Card className="bg-[#111827] border-white/5">
-                <CardContent className="py-12 text-center">
-                  <p className="text-gray-400">لا توجد مستندات</p>
+                <CardHeader>
+                  <CardTitle className="text-white" style={{ fontFamily: 'Cairo' }}>
+                    مستندات القضية
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CaseDocuments caseId={id} />
                 </CardContent>
               </Card>
             </TabsContent>
 
             <TabsContent value="invoices" className="mt-6">
               <Card className="bg-[#111827] border-white/5">
-                <CardContent className="py-12 text-center">
-                  <p className="text-gray-400">لا توجد فواتير</p>
+                <CardHeader>
+                  <CardTitle className="text-white" style={{ fontFamily: 'Cairo' }}>
+                    فواتير القضية
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CaseInvoices caseId={id} />
                 </CardContent>
               </Card>
             </TabsContent>
