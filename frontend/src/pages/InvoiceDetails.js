@@ -229,8 +229,8 @@ const InvoiceDetails = () => {
     return methods[method] || method;
   };
 
-  const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
-  const remaining = invoice ? invoice.total_amount - totalPaid : 0;
+  const totalPaid = payments && Array.isArray(payments) ? payments.reduce((sum, p) => sum + (p.amount || 0), 0) : 0;
+  const remaining = invoice && invoice.total_amount ? invoice.total_amount - totalPaid : 0;
 
   if (loading) {
     return (
