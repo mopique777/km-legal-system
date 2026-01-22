@@ -6,8 +6,11 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Cases from './pages/Cases';
+import Documents from './pages/Documents';
+import Invoices from './pages/Invoices';
 import AIAssistant from './pages/AIAssistant';
 import Settings from './pages/Settings';
+import Profile from './pages/Profile';
 import './App.css';
 
 const PrivateRoute = ({ children }) => {
