@@ -15,6 +15,7 @@ const Invoices = () => {
   const [cases, setCases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showDialog, setShowDialog] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const [formData, setFormData] = useState({
     case_id: '',
