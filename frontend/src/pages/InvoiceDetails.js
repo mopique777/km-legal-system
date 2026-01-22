@@ -43,16 +43,31 @@ const InvoiceDetails = () => {
 
   const fetchInvoice = async () => {
     try {
-      // Get all invoices and find the one we need
+      // Get all cases first
       const casesResponse = await api.get('/cases');
+      if (!casesResponse.data || casesResponse.data.length === 0) {
+        toast.error('لا توجد قضايا');
+        navigate('/invoices');
+        return;
+      }
+
       let foundInvoice = null;
+      let foundCaseId = null;
       
+      // Search through all cases for the invoice
       for (const caseItem of casesResponse.data) {
-        const invoicesResponse = await api.get(`/cases/${caseItem.id}/invoices`);
-        foundInvoice = invoicesResponse.data.find(inv => inv.id === id);
-        if (foundInvoice) {
-          foundInvoice.case_id = caseItem.id;
-          break;
+        try {
+          const invoicesResponse = await api.get(`/cases/${caseItem.id}/invoices`);
+          if (invoicesResponse.data && Array.isArray(invoicesResponse.data)) {
+            const inv = invoicesResponse.data.find(invoice => invoice.id === id);
+            if (inv) {
+              foundInvoice = inv;
+              foundCaseId = caseItem.id;
+              break;
+            }
+          }
+        } catch (err) {
+          console.error(`Error fetching invoices for case ${caseItem.id}:`, err);
         }
       }
 
@@ -62,16 +77,19 @@ const InvoiceDetails = () => {
         return;
       }
 
+      foundInvoice.case_id = foundCaseId;
       setInvoice(foundInvoice);
+      
       setFormData({
-        type: foundInvoice.type,
-        amount: foundInvoice.amount,
-        vat_percentage: (foundInvoice.vat_amount / foundInvoice.amount) * 100,
+        type: foundInvoice.type || 'fees',
+        amount: foundInvoice.amount || 0,
+        vat_percentage: foundInvoice.amount > 0 ? ((foundInvoice.vat_amount || 0) / foundInvoice.amount) * 100 : 5,
         description_ar: foundInvoice.description_ar || '',
         due_date: foundInvoice.due_date || '',
-        status: foundInvoice.status
+        status: foundInvoice.status || 'pending'
       });
     } catch (error) {
+      console.error('Error fetching invoice:', error);
       toast.error('فشل تحميل الفاتورة');
       navigate('/invoices');
     } finally {
