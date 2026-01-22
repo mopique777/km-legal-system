@@ -10,6 +10,7 @@ const Dashboard = () => {
   const { user, company } = useAuth();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     fetchStats();
