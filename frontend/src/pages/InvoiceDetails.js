@@ -357,7 +357,7 @@ const InvoiceDetails = () => {
                   <div>
                     <p className="text-gray-400 text-sm mb-1">المبلغ الإجمالي</p>
                     <p className="text-3xl font-bold text-white number-input" style={{ fontFamily: 'Manrope' }}>
-                      {invoice?.total_amount.toFixed(2)} AED
+                      {invoice?.total_amount ? invoice.total_amount.toFixed(2) : '0.00'} AED
                     </p>
                   </div>
                   <DollarSign className="w-10 h-10 text-[#D4AF37]" />
@@ -371,7 +371,7 @@ const InvoiceDetails = () => {
                   <div>
                     <p className="text-gray-400 text-sm mb-1">المدفوع</p>
                     <p className="text-3xl font-bold text-green-500 number-input" style={{ fontFamily: 'Manrope' }}>
-                      {totalPaid.toFixed(2)} AED
+                      {totalPaid ? totalPaid.toFixed(2) : '0.00'} AED
                     </p>
                   </div>
                   <CheckCircle className="w-10 h-10 text-green-500" />
@@ -385,7 +385,7 @@ const InvoiceDetails = () => {
                   <div>
                     <p className="text-gray-400 text-sm mb-1">المتبقي</p>
                     <p className={`text-3xl font-bold number-input ${remaining > 0 ? 'text-red-500' : 'text-green-500'}`} style={{ fontFamily: 'Manrope' }}>
-                      {remaining.toFixed(2)} AED
+                      {remaining ? remaining.toFixed(2) : '0.00'} AED
                     </p>
                   </div>
                   {remaining > 0 ? (
