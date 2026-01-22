@@ -46,7 +46,7 @@ const Sidebar = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5">
+        <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 cursor-pointer hover:bg-white/10 transition-colors" onClick={() => navigate('/profile')} data-testid="profile-card">
           <Avatar data-testid="user-avatar">
             <AvatarImage src={user?.avatar_url || 'https://images.unsplash.com/photo-1736939681295-bb2e6759dddc?crop=entropy&cs=srgb&fm=jpg&q=85'} />
             <AvatarFallback>{user?.full_name_ar?.[0] || 'U'}</AvatarFallback>
