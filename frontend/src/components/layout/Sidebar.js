@@ -100,11 +100,11 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className="hidden md:block w-64 bg-[#0B0F19] border-l border-white/10 h-screen fixed left-0 top-0 z-40">
+      <div className="hidden md:block w-64 bg-[#0B0F19] border-l border-white/10 h-screen fixed right-0 top-0 z-40">
         <SidebarContent />
       </div>
 
-      <div className="md:hidden fixed top-4 left-4 z-40">
+      <div className="md:hidden fixed top-4 right-4 z-40">
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="bg-[#111827] text-white" data-testid="mobile-menu-button">
