@@ -111,7 +111,7 @@ const Sidebar = () => {
       </div>
 
       <div className="md:hidden fixed top-4 right-4 z-40">
-        <Sheet>
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="bg-[#111827] text-white" data-testid="mobile-menu-button">
               <Menu className="w-6 h-6" />
