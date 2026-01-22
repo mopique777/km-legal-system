@@ -181,11 +181,27 @@ const InvoiceDetails = () => {
 
   const handleAddPayment = async (e) => {
     e.preventDefault();
+    if (!invoice || !invoice.case_id) {
+      toast.error('معلومات الفاتورة غير كاملة');
+      return;
+    }
+
+    const amount = parseFloat(paymentData.amount);
+    if (isNaN(amount) || amount <= 0) {
+      toast.error('المبلغ غير صحيح');
+      return;
+    }
+
+    if (amount > remaining) {
+      toast.error(`المبلغ أكبر من المتبقي (${remaining.toFixed(2)} AED)`);
+      return;
+    }
+
     try {
       await api.post('/payments', {
         invoice_id: id,
         case_id: invoice.case_id,
-        amount: parseFloat(paymentData.amount),
+        amount: amount,
         method: paymentData.method,
         notes: paymentData.notes
       });
@@ -196,6 +212,7 @@ const InvoiceDetails = () => {
       fetchInvoice();
       fetchPayments();
     } catch (error) {
+      console.error('Payment error:', error);
       toast.error(error.response?.data?.detail || 'فشل إضافة الدفعة');
     }
   };
