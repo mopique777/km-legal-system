@@ -193,6 +193,84 @@ const Settings = () => {
                 </div>
               </CardContent>
             </Card>
+
+            <Card className="bg-[#111827] border-white/5 mt-6">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center gap-2" style={{ fontFamily: 'Cairo' }}>
+                  <Bot className="w-6 h-6 text-[#D4AF37]" />
+                  مفاتيح الذكاء الاصطناعي
+                </CardTitle>
+                <p className="text-sm text-gray-400 mt-2">
+                  يمكنك استخدام مفاتيحك الخاصة أو استخدام Emergent LLM Key الموحد
+                </p>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleApiKeysSubmit} className="space-y-4">
+                  <div>
+                    <Label className="text-right text-gray-300">OpenAI API Key</Label>
+                    <Input
+                      type="password"
+                      value={apiKeys.openai_key}
+                      onChange={(e) => setApiKeys({...apiKeys, openai_key: e.target.value})}
+                      className="bg-black/20 border-white/10 text-white text-right"
+                      placeholder="sk-..."
+                      data-testid="openai-key-input"
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="text-right text-gray-300">Google Gemini API Key</Label>
+                    <Input
+                      type="password"
+                      value={apiKeys.gemini_key}
+                      onChange={(e) => setApiKeys({...apiKeys, gemini_key: e.target.value})}
+                      className="bg-black/20 border-white/10 text-white text-right"
+                      placeholder="AI..."
+                      data-testid="gemini-key-input"
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="text-right text-gray-300">Google Drive Client ID</Label>
+                    <Input
+                      value={apiKeys.google_drive_client_id}
+                      onChange={(e) => setApiKeys({...apiKeys, google_drive_client_id: e.target.value})}
+                      className="bg-black/20 border-white/10 text-white text-right"
+                      placeholder="xxxxx.apps.googleusercontent.com"
+                      data-testid="gdrive-client-id-input"
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="text-right text-gray-300">Google Drive Client Secret</Label>
+                    <Input
+                      type="password"
+                      value={apiKeys.google_drive_client_secret}
+                      onChange={(e) => setApiKeys({...apiKeys, google_drive_client_secret: e.target.value})}
+                      className="bg-black/20 border-white/10 text-white text-right"
+                      placeholder="GOCSPX-..."
+                      data-testid="gdrive-secret-input"
+                    />
+                  </div>
+
+                  <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+                    <p className="text-sm text-blue-400 text-right">
+                      💡 <strong>ملاحظة:</strong> إذا تركت الحقول فارغة، سيتم استخدام Emergent LLM Key الموحد تلقائياً
+                    </p>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={loadingKeys}
+                    className="w-full bg-[#D4AF37] text-black hover:bg-[#B5952F]"
+                    data-testid="save-api-keys-button"
+                  >
+                    <Save className="w-5 h-5 ml-2" />
+                    {loadingKeys ? 'جاري الحفظ...' : 'حفظ مفاتيح API'}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
