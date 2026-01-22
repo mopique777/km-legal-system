@@ -544,10 +544,39 @@ async def get_invoices(case_id: str, user: User = Depends(get_current_user)):
     return [Invoice(**inv) for inv in invoices]
 
 @api_router.put("/invoices/{invoice_id}")
-async def update_invoice_status(invoice_id: str, status: str, user: User = Depends(get_current_user)):
-    await db.invoices.update_one({"id": invoice_id}, {"$set": {"status": status}})
+async def update_invoice_status(invoice_id: str, update_data: dict, user: User = Depends(get_current_user)):
+    # Allow updating all fields or just status
+    allowed_fields = ["status", "type", "amount", "vat_percentage", "description_ar", "due_date"]
+    update_fields = {k: v for k, v in update_data.items() if k in allowed_fields}
+    
+    # Recalculate totals if amount or vat changed
+    if "amount" in update_fields or "vat_percentage" in update_fields:
+        invoice = await db.invoices.find_one({"id": invoice_id}, {"_id": 0})
+        if not invoice:
+            raise HTTPException(status_code=404, detail="Invoice not found")
+        
+        amount = update_fields.get("amount", invoice["amount"])
+        vat_percentage = update_fields.get("vat_percentage", (invoice["vat_amount"] / invoice["amount"]) * 100)
+        
+        vat_amount = amount * (vat_percentage / 100)
+        total_amount = amount + vat_amount
+        
+        update_fields["vat_amount"] = vat_amount
+        update_fields["total_amount"] = total_amount
+    
+    await db.invoices.update_one({"id": invoice_id}, {"$set": update_fields})
     updated = await db.invoices.find_one({"id": invoice_id}, {"_id": 0})
     return Invoice(**updated)
+
+@api_router.delete("/invoices/{invoice_id}")
+async def delete_invoice(invoice_id: str, user: User = Depends(get_current_user)):
+    # Delete associated payments first
+    await db.payments.delete_many({"invoice_id": invoice_id})
+    # Delete invoice
+    result = await db.invoices.delete_one({"id": invoice_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Invoice not found")
+    return {"message": "Invoice deleted successfully"}
 
 @api_router.post("/payments")
 async def create_payment(payment_data: PaymentCreate, user: User = Depends(get_current_user)):
