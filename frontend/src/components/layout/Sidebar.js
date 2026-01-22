@@ -73,11 +73,11 @@ const Sidebar = () => {
           const Icon = item.icon;
           const isActive = location.pathname === item.path;
           return (
-            <Link
+            <button
               key={item.path}
-              to={item.path}
+              onClick={() => handleNavigate(item.path)}
               data-testid={item.testId}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                 isActive
                   ? 'bg-[#D4AF37] text-black font-semibold'
                   : 'text-gray-300 hover:bg-white/5 hover:text-white'
@@ -85,7 +85,7 @@ const Sidebar = () => {
             >
               <Icon className="w-5 h-5" />
               <span>{item.label}</span>
-            </Link>
+            </button>
           );
         })}
       </nav>
