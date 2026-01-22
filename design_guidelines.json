@@ -1,0 +1,145 @@
+{
+  "identity": {
+    "persona": "E1: The Anti-AI Designer",
+    "mission": "Create a top 1% legal SaaS interface that blends 'Old Money' authority with 'High-Tech' efficiency. No generic templates.",
+    "principles": [
+      "Fusion: Legal Tradition (Serif/Gold) x Cyber Security (Dark Mode/Neon Traces)",
+      "Emotion: Trust, Authority, Precision",
+      "Content: Data is the hero. Legibility is paramount.",
+      "RTL First: Every decision must prioritize the Arabic reading flow."
+    ]
+  },
+  "design_system": {
+    "theme": {
+      "mode": "dark",
+      "strategy": "Deep Obsidian & Gold",
+      "palette": {
+        "background": {
+          "default": "#0B0F19",
+          "paper": "#111827",
+          "subtle": "#1F2937"
+        },
+        "primary": {
+          "main": "#D4AF37",
+          "hover": "#B5952F",
+          "foreground": "#000000"
+        },
+        "secondary": {
+          "main": "#334155",
+          "foreground": "#FFFFFF"
+        },
+        "accent": {
+          "main": "#3B82F6",
+          "subtle": "rgba(59, 130, 246, 0.1)"
+        },
+        "text": {
+          "primary": "#F9FAFB",
+          "secondary": "#9CA3AF",
+          "muted": "#6B7280"
+        },
+        "status": {
+          "success": "#10B981",
+          "warning": "#F59E0B",
+          "error": "#EF4444",
+          "info": "#3B82F6"
+        }
+      }
+    },
+    "typography": {
+      "font_family": {
+        "arabic": "Cairo, sans-serif",
+        "english": "Manrope, sans-serif",
+        "mono": "JetBrains Mono, monospace"
+      },
+      "scale": {
+        "h1": "text-4xl font-bold tracking-tight",
+        "h2": "text-3xl font-semibold tracking-tight",
+        "h3": "text-2xl font-semibold",
+        "body": "text-base font-normal leading-relaxed",
+        "small": "text-sm font-medium text-muted-foreground"
+      }
+    },
+    "spacing": {
+      "container_padding": "p-6 md:p-8 lg:p-12",
+      "element_gap": "gap-4 md:gap-6",
+      "section_gap": "gap-8 md:gap-12"
+    },
+    "borders": {
+      "radius": "rounded-md",
+      "width": "border",
+      "color": "border-white/10"
+    },
+    "effects": {
+      "glass": "backdrop-blur-xl bg-black/40 border border-white/10",
+      "shadow": "shadow-lg shadow-black/20",
+      "glow": "drop-shadow-[0_0_15px_rgba(212,175,55,0.15)]"
+    }
+  },
+  "rtl_strategy": {
+    "direction": "rtl",
+    "rules": [
+      "Sidebar must be on the RIGHT.",
+      "Form labels must align RIGHT.",
+      "Icons (arrows, chevrons) must be mirrored (e.g., 'chevron-left' becomes 'next').",
+      "Flex containers must use 'flex-row-reverse' if not natively handling RTL, or rely on logical properties (ms-*, me-*).",
+      "Tables: First column is on the RIGHT."
+    ]
+  },
+  "components": {
+    "buttons": {
+      "style": "sharp or slightly rounded (rounded-md)",
+      "primary": "bg-[#D4AF37] text-black hover:bg-[#B5952F] font-bold shadow-[0_0_10px_rgba(212,175,55,0.2)]",
+      "secondary": "bg-white/5 text-white border border-white/10 hover:bg-white/10",
+      "ghost": "hover:bg-white/5 text-gray-300 hover:text-white"
+    },
+    "cards": {
+      "style": "The Tracing Beam (Subtle)",
+      "base": "bg-[#111827] border border-white/5 relative overflow-hidden group",
+      "hover": "hover:border-[#D4AF37]/30 transition-colors duration-300"
+    },
+    "inputs": {
+      "style": "bg-black/20 border-white/10 focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] text-right placeholder:text-right"
+    },
+    "navigation": {
+      "sidebar": "w-64 bg-[#0B0F19] border-l border-white/10 h-screen fixed right-0 top-0 z-50",
+      "topbar": "h-16 bg-[#0B0F19]/80 backdrop-blur-md border-b border-white/10 sticky top-0 z-40"
+    }
+  },
+  "layout_patterns": {
+    "dashboard": {
+      "type": "Bento Grid (Mode B)",
+      "grid": "grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6",
+      "widgets": {
+        "summary": "col-span-1 h-32",
+        "chart_main": "col-span-2 row-span-2",
+        "list_feed": "col-span-1 row-span-2"
+      }
+    },
+    "auth_page": {
+      "type": "Split Screen",
+      "image_side": "w-1/2 hidden lg:block relative",
+      "form_side": "w-full lg:w-1/2 flex items-center justify-center bg-[#0B0F19]"
+    }
+  },
+  "assets": {
+    "images": {
+      "login_bg": "https://images.unsplash.com/photo-1671722294182-ed01cbe66bd1?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "user_avatar": "https://images.unsplash.com/photo-1736939681295-bb2e6759dddc?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "logo_placeholder": "https://via.placeholder.com/150x50?text=KM+Legal"
+    },
+    "icons": {
+      "library": "lucide-react",
+      "preferred": ["Scale", "Gavel", "FileText", "Users", "Calendar", "Settings", "Search", "Bell"]
+    }
+  },
+  "universal_guidelines": [
+    "DO NOT use gradients for backgrounds. Use solid deep colors + noise/texture.",
+    "DO NOT center text in cards. Align Right (for Arabic).",
+    "Use 'sonner' for toasts.",
+    "All interactive elements must have 'data-testid'.",
+    "Ensure 'dir=rtl' is set on the root HTML element.",
+    "Use 'Cairo' font for everything Arabic.",
+    "English numbers in Arabic text are acceptable and standard in technical fields."
+  ],
+  "instructions_to_main_agent": "You are building the 'KM Legal System'. Start by setting up the global CSS for RTL and the Dark Theme variables. Then build the Layout (Sidebar/Header). Then implement the Dashboard with the Bento Grid. Finally, build the Case Management and Document views. Use the provided image URLs. STRICTLY FOLLOW THE COLOR PALETTE."
+}
