@@ -757,6 +757,43 @@ async def get_stats(user: User = Depends(get_current_user)):
         "total_revenue": total_revenue
     }
 
+@api_router.get("/settings/api-keys")
+async def get_api_keys(user: User = Depends(get_current_user)):
+    keys_doc = await db.api_keys.find_one({"user_id": user.id}, {"_id": 0})
+    if not keys_doc:
+        return {
+            "openai_key": "",
+            "gemini_key": "",
+            "google_drive_client_id": "",
+            "google_drive_client_secret": ""
+        }
+    
+    return {
+        "openai_key": keys_doc.get("openai_key", "")[:10] + "..." if keys_doc.get("openai_key") else "",
+        "gemini_key": keys_doc.get("gemini_key", "")[:10] + "..." if keys_doc.get("gemini_key") else "",
+        "google_drive_client_id": keys_doc.get("google_drive_client_id", ""),
+        "google_drive_client_secret": keys_doc.get("google_drive_client_secret", "")[:10] + "..." if keys_doc.get("google_drive_client_secret") else ""
+    }
+
+@api_router.post("/settings/api-keys")
+async def save_api_keys(keys_data: dict, user: User = Depends(get_current_user)):
+    allowed_keys = ["openai_key", "gemini_key", "google_drive_client_id", "google_drive_client_secret"]
+    update_data = {k: v for k, v in keys_data.items() if k in allowed_keys and v}
+    
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No valid keys provided")
+    
+    update_data["user_id"] = user.id
+    update_data["updated_at"] = datetime.now(timezone.utc).isoformat()
+    
+    await db.api_keys.update_one(
+        {"user_id": user.id},
+        {"$set": update_data},
+        upsert=True
+    )
+    
+    return {"message": "API keys saved successfully"}
+
 app.include_router(api_router)
 
 app.add_middleware(
