@@ -12,6 +12,7 @@ import api from '../utils/api';
 import { toast } from 'sonner';
 
 const Invoices = () => {
+  const navigate = useNavigate();
   const [invoices, setInvoices] = useState([]);
   const [cases, setCases] = useState([]);
   const [loading, setLoading] = useState(true);
