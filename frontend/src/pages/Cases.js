@@ -107,9 +107,9 @@ const Cases = () => {
 
   return (
     <div className="flex min-h-screen bg-[#0B0F19]" dir="rtl">
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
       
-      <div className="flex-1 md:ml-64">
+      <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'md:ml-64' : 'md:ml-0'}`}>
         <div className="p-6 md:p-12">
           <div className="flex items-center justify-between mb-8">
             <div>
