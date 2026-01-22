@@ -8,9 +8,159 @@ import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { ArrowRight, Save, Trash2, FileText } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog';
+import { ArrowRight, Save, Trash2, FileText, Plus, Download, DollarSign } from 'lucide-react';
 import api from '../utils/api';
 import { toast } from 'sonner';
+
+// Component for Documents
+const CaseDocuments = ({ caseId }) => {
+  const [documents, setDocuments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchDocuments();
+  }, [caseId]);
+
+  const fetchDocuments = async () => {
+    try {
+      const response = await api.get(`/cases/${caseId}/documents`);
+      setDocuments(response.data);
+    } catch (error) {
+      console.error('Failed to fetch documents');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDownload = async (docId, fileName) => {
+    try {
+      const response = await api.get(`/documents/${docId}/download`, {
+        responseType: 'blob'
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      toast.error('فشل تحميل المستند');
+    }
+  };
+
+  if (loading) return <p className="text-gray-400 text-center py-8">جاري التحميل...</p>;
+  
+  if (documents.length === 0) {
+    return <p className="text-gray-400 text-center py-8">لا توجد مستندات</p>;
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {documents.map((doc) => (
+        <div key={doc.id} className="p-4 bg-white/5 rounded-lg border border-white/10">
+          <div className="flex items-start justify-between mb-2">
+            <div className="flex-1">
+              <h4 className="text-white font-semibold mb-1">{doc.title}</h4>
+              <p className="text-sm text-gray-400">{doc.file_name}</p>
+              <p className="text-xs text-gray-500">{(doc.file_size / 1024).toFixed(2)} KB</p>
+            </div>
+            <Button
+              onClick={() => handleDownload(doc.id, doc.file_name)}
+              size="sm"
+              variant="outline"
+              className="border-[#D4AF37] text-[#D4AF37]"
+            >
+              <Download className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// Component for Invoices
+const CaseInvoices = ({ caseId }) => {
+  const navigate = useNavigate();
+  const [invoices, setInvoices] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchInvoices();
+  }, [caseId]);
+
+  const fetchInvoices = async () => {
+    try {
+      const response = await api.get(`/cases/${caseId}/invoices`);
+      setInvoices(response.data);
+    } catch (error) {
+      console.error('Failed to fetch invoices');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getTypeLabel = (type) => {
+    const types = {
+      'fees': 'أتعاب',
+      'expenses': 'مصاريف',
+      'receipt': 'إيصال',
+      'credit_note': 'إشعار دائن',
+      'debit_note': 'إشعار مدين'
+    };
+    return types[type] || type;
+  };
+
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case 'paid': return 'مدفوعة';
+      case 'partial': return 'دفع جزئي';
+      case 'pending': return 'معلقة';
+      default: return status;
+    }
+  };
+
+  if (loading) return <p className="text-gray-400 text-center py-8">جاري التحميل...</p>;
+  
+  if (invoices.length === 0) {
+    return <p className="text-gray-400 text-center py-8">لا توجد فواتير</p>;
+  }
+
+  return (
+    <div className="space-y-3">
+      {invoices.map((invoice) => (
+        <div 
+          key={invoice.id} 
+          className="p-4 bg-white/5 rounded-lg border border-white/10 hover:border-[#D4AF37]/30 transition-colors cursor-pointer"
+          onClick={() => navigate(`/invoices/${invoice.id}`)}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                <h4 className="text-white font-semibold">{getTypeLabel(invoice.type)}</h4>
+                <span className="text-xs text-gray-400 number-input">#{invoice.invoice_number}</span>
+              </div>
+              <div className="flex items-center gap-4 text-sm">
+                <span className="text-gray-400">{getStatusLabel(invoice.status)}</span>
+                {invoice.description_ar && (
+                  <span className="text-gray-500 text-xs">{invoice.description_ar}</span>
+                )}
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-xl font-bold text-[#D4AF37] number-input">
+                {invoice.total_amount.toFixed(2)} AED
+              </p>
+              <p className="text-xs text-gray-400">شامل الضريبة</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const CaseDetails = () => {
   const { id } = useParams();
