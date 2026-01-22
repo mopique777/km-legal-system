@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 const Profile = () => {
   const { user, checkAuth } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [profileData, setProfileData] = useState({
     avatar_url: user?.avatar_url || '',
     full_name_ar: user?.full_name_ar || '',
