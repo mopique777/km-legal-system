@@ -92,6 +92,8 @@ const SessionForm = ({ caseId, onSuccess }) => {
 const CaseSessions = ({ caseId }) => {
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editingSession, setEditingSession] = useState(null);
+  const [showEditDialog, setShowEditDialog] = useState(false);
 
   useEffect(() => {
     fetchSessions();
@@ -105,6 +107,35 @@ const CaseSessions = ({ caseId }) => {
       console.error('Failed to fetch sessions');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (sessionId) => {
+    if (!window.confirm('هل أنت متأكد من حذف هذه الجلسة؟')) return;
+    
+    try {
+      await api.delete(`/sessions/${sessionId}`);
+      toast.success('تم حذف الجلسة بنجاح');
+      fetchSessions();
+    } catch (error) {
+      toast.error('فشل حذف الجلسة');
+    }
+  };
+
+  const handleEdit = (session) => {
+    setEditingSession(session);
+    setShowEditDialog(true);
+  };
+
+  const handleUpdate = async (formData) => {
+    try {
+      await api.put(`/sessions/${editingSession.id}`, formData);
+      toast.success('تم تحديث الجلسة بنجاح');
+      setShowEditDialog(false);
+      setEditingSession(null);
+      fetchSessions();
+    } catch (error) {
+      toast.error('فشل تحديث الجلسة');
     }
   };
 
@@ -133,31 +164,157 @@ const CaseSessions = ({ caseId }) => {
   }
 
   return (
-    <div className="space-y-3">
-      {sessions.map((session) => (
-        <div key={session.id} className="p-4 bg-white/5 rounded-lg border border-white/10">
-          <div className="flex items-start justify-between mb-3">
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <h4 className="text-white font-semibold">{session.location}</h4>
-                <span className={`text-sm ${getStatusColor(session.status)}`}>
-                  {getStatusLabel(session.status)}
-                </span>
+    <>
+      <div className="space-y-3">
+        {sessions.map((session) => (
+          <div key={session.id} className="p-4 bg-white/5 rounded-lg border border-white/10">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-2">
+                  <h4 className="text-white font-semibold">{session.location}</h4>
+                  <span className={`text-sm ${getStatusColor(session.status)}`}>
+                    {getStatusLabel(session.status)}
+                  </span>
+                </div>
+                <div className="flex items-center gap-4 text-sm text-gray-400">
+                  <span>📅 {new Date(session.session_date).toLocaleDateString('ar-AE')}</span>
+                  {session.session_time && (
+                    <span>🕐 {session.session_time}</span>
+                  )}
+                </div>
               </div>
-              <div className="flex items-center gap-4 text-sm text-gray-400">
-                <span>📅 {new Date(session.session_date).toLocaleDateString('ar-AE')}</span>
-                {session.session_time && (
-                  <span>🕐 {session.session_time}</span>
-                )}
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => handleEdit(session)}
+                  size="sm"
+                  variant="outline"
+                  className="border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black"
+                  data-testid={`edit-session-${session.id}`}
+                >
+                  تعديل
+                </Button>
+                <Button
+                  onClick={() => handleDelete(session.id)}
+                  size="sm"
+                  variant="destructive"
+                  className="bg-red-600 hover:bg-red-700"
+                  data-testid={`delete-session-${session.id}`}
+                >
+                  حذف
+                </Button>
               </div>
             </div>
+            {session.notes_ar && (
+              <p className="text-sm text-gray-300 mt-2">{session.notes_ar}</p>
+            )}
           </div>
-          {session.notes_ar && (
-            <p className="text-sm text-gray-300 mt-2">{session.notes_ar}</p>
+        ))}
+      </div>
+
+      {/* Edit Dialog */}
+      <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
+        <DialogContent className="bg-[#111827] border-white/10" dir="rtl">
+          <DialogHeader>
+            <DialogTitle className="text-white text-right">تعديل الجلسة</DialogTitle>
+          </DialogHeader>
+          {editingSession && (
+            <SessionEditForm 
+              session={editingSession} 
+              onUpdate={handleUpdate}
+              onCancel={() => setShowEditDialog(false)}
+            />
           )}
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
+// Session Edit Form Component
+const SessionEditForm = ({ session, onUpdate, onCancel }) => {
+  const [formData, setFormData] = useState({
+    session_date: session.session_date,
+    session_time: session.session_time || '',
+    location: session.location,
+    notes_ar: session.notes_ar || '',
+    status: session.status
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    await onUpdate(formData);
+    setLoading(false);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label className="text-right text-gray-300">تاريخ الجلسة</Label>
+          <Input
+            type="date"
+            value={formData.session_date}
+            onChange={(e) => setFormData({...formData, session_date: e.target.value})}
+            className="bg-black/20 border-white/10 text-white"
+            required
+          />
         </div>
-      ))}
-    </div>
+        <div>
+          <Label className="text-right text-gray-300">وقت الجلسة</Label>
+          <Input
+            type="time"
+            value={formData.session_time}
+            onChange={(e) => setFormData({...formData, session_time: e.target.value})}
+            className="bg-black/20 border-white/10 text-white"
+          />
+        </div>
+      </div>
+
+      <div>
+        <Label className="text-right text-gray-300">المكان</Label>
+        <Input
+          value={formData.location}
+          onChange={(e) => setFormData({...formData, location: e.target.value})}
+          className="bg-black/20 border-white/10 text-white text-right"
+          required
+        />
+      </div>
+
+      <div>
+        <Label className="text-right text-gray-300">الحالة</Label>
+        <Select value={formData.status} onValueChange={(v) => setFormData({...formData, status: v})}>
+          <SelectTrigger className="bg-black/20 border-white/10 text-white">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-[#111827] border-white/10">
+            <SelectItem value="scheduled">مجدولة</SelectItem>
+            <SelectItem value="completed">منتهية</SelectItem>
+            <SelectItem value="cancelled">ملغاة</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div>
+        <Label className="text-right text-gray-300">ملاحظات</Label>
+        <Textarea
+          value={formData.notes_ar}
+          onChange={(e) => setFormData({...formData, notes_ar: e.target.value})}
+          className="bg-black/20 border-white/10 text-white text-right"
+          rows={3}
+        />
+      </div>
+
+      <div className="flex gap-2">
+        <Button type="submit" disabled={loading} className="flex-1 bg-green-600 hover:bg-green-700">
+          {loading ? 'جاري الحفظ...' : 'حفظ التعديلات'}
+        </Button>
+        <Button type="button" onClick={onCancel} variant="outline" className="border-white/10 text-white">
+          إلغاء
+        </Button>
+      </div>
+    </form>
   );
 };
 
