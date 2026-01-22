@@ -100,17 +100,27 @@ const InvoiceDetails = () => {
   const fetchPayments = async () => {
     try {
       const casesResponse = await api.get('/cases');
+      if (!casesResponse.data || casesResponse.data.length === 0) {
+        return;
+      }
+
       let allPayments = [];
       
       for (const caseItem of casesResponse.data) {
-        const paymentsResponse = await api.get(`/cases/${caseItem.id}/payments`);
-        const invoicePayments = paymentsResponse.data.filter(p => p.invoice_id === id);
-        allPayments = [...allPayments, ...invoicePayments];
+        try {
+          const paymentsResponse = await api.get(`/cases/${caseItem.id}/payments`);
+          if (paymentsResponse.data && Array.isArray(paymentsResponse.data)) {
+            const invoicePayments = paymentsResponse.data.filter(p => p.invoice_id === id);
+            allPayments = [...allPayments, ...invoicePayments];
+          }
+        } catch (err) {
+          console.error(`Error fetching payments for case ${caseItem.id}:`, err);
+        }
       }
       
       setPayments(allPayments);
     } catch (error) {
-      console.error('Failed to fetch payments');
+      console.error('Failed to fetch payments:', error);
     }
   };
 
