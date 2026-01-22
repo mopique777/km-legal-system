@@ -78,7 +78,28 @@ const Settings = () => {
     e.preventDefault();
     setLoadingKeys(true);
     try {
-      await api.post('/settings/api-keys', apiKeys);
+      // إرسال المفاتيح فقط إذا كانت غير فارغة
+      const keysToSave = {};
+      if (apiKeys.openai_key && apiKeys.openai_key.trim()) {
+        keysToSave.openai_key = apiKeys.openai_key;
+      }
+      if (apiKeys.gemini_key && apiKeys.gemini_key.trim()) {
+        keysToSave.gemini_key = apiKeys.gemini_key;
+      }
+      if (apiKeys.google_drive_client_id && apiKeys.google_drive_client_id.trim()) {
+        keysToSave.google_drive_client_id = apiKeys.google_drive_client_id;
+      }
+      if (apiKeys.google_drive_client_secret && apiKeys.google_drive_client_secret.trim()) {
+        keysToSave.google_drive_client_secret = apiKeys.google_drive_client_secret;
+      }
+
+      if (Object.keys(keysToSave).length === 0) {
+        // لا توجد مفاتيح للحفظ - سيستخدم النظام Emergent LLM Key
+        toast.success('سيتم استخدام Emergent LLM Key الموحد');
+        return;
+      }
+
+      await api.post('/settings/api-keys', keysToSave);
       toast.success('تم حفظ مفاتيح API بنجاح');
     } catch (error) {
       toast.error(error.response?.data?.detail || 'فشل حفظ المفاتيح');
