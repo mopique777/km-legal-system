@@ -106,10 +106,24 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
   return (
     <>
-      <div className="hidden md:block w-64 bg-[#0B0F19] border-l border-white/10 h-screen fixed right-0 top-0 z-40">
+      {/* Desktop Sidebar */}
+      <div className={`hidden md:block w-64 bg-[#0B0F19] border-l border-white/10 h-screen fixed right-0 top-0 z-40 transition-transform duration-300 ${
+        isOpen ? 'translate-x-0' : 'translate-x-full'
+      }`}>
         <SidebarContent />
       </div>
 
+      {/* Desktop Toggle Button */}
+      <Button
+        onClick={() => setIsOpen(!isOpen)}
+        className="hidden md:flex fixed top-4 right-4 z-50 bg-[#111827] text-white hover:bg-[#1f2937] border border-white/10"
+        size="icon"
+        data-testid="desktop-menu-toggle"
+      >
+        <Menu className="w-6 h-6" />
+      </Button>
+
+      {/* Mobile Menu */}
       <div className="md:hidden fixed top-4 right-4 z-40">
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger asChild>
