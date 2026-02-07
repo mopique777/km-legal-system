@@ -1,0 +1,23 @@
+[build]
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+startCommand = "docker-compose up"
+restartPolicyMaxRetries = 5
+restartPolicyWindowMs = 60000
+
+[[services]]
+name = "backend"
+dockerfile = "backend/Dockerfile"
+port = 8000
+
+[[services]]
+name = "frontend"
+dockerfile = "frontend/Dockerfile"
+port = 3000
+
+[[services]]
+name = "mongodb"
+image = "mongo:latest"
+port = 27017
