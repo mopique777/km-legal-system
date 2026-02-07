@@ -94,8 +94,8 @@ const Settings = () => {
       }
 
       if (Object.keys(keysToSave).length === 0) {
-        // لا توجد مفاتيح للحفظ - سيستخدم النظام Emergent LLM Key
-        toast.success('سيتم استخدام Emergent LLM Key الموحد');
+        // لا توجد مفاتيح للحفظ - سيستخدم النظام Manus AI Key
+        toast.success('سيتم استخدام Manus AI Key الموحد');
         return;
       }
 
@@ -223,7 +223,7 @@ const Settings = () => {
                   مفاتيح الذكاء الاصطناعي
                 </CardTitle>
                 <p className="text-sm text-gray-400 mt-2">
-                  يمكنك استخدام مفاتيحك الخاصة أو استخدام Emergent LLM Key الموحد
+                  يمكنك استخدام مفاتيحك الخاصة أو استخدام Manus AI Key الموحد
                 </p>
               </CardHeader>
               <CardContent>
@@ -277,7 +277,7 @@ const Settings = () => {
 
                   <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
                     <p className="text-sm text-blue-400 text-right">
-                      💡 <strong>ملاحظة:</strong> إذا تركت الحقول فارغة، سيتم استخدام Emergent LLM Key الموحد تلقائياً
+                      💡 <strong>ملاحظة:</strong> إذا تركت الحقول فارغة، سيتم استخدام Manus AI Key الموحد تلقائياً
                     </p>
                   </div>
 

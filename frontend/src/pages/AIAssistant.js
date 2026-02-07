@@ -14,7 +14,7 @@ const AIAssistant = () => {
   const [loading, setLoading] = useState(false);
   const [conversationId, setConversationId] = useState(null);
   const [provider, setProvider] = useState('openai');
-  const [model, setModel] = useState('gpt-5.2');
+  const [model, setModel] = useState('gpt-4.1-mini');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const messagesEndRef = useRef(null);
 
@@ -63,9 +63,9 @@ const AIAssistant = () => {
   const handleModelChange = (newProvider) => {
     setProvider(newProvider);
     if (newProvider === 'openai') {
-      setModel('gpt-5.2');
+      setModel('gpt-4.1-mini');
     } else if (newProvider === 'gemini') {
-      setModel('gemini-3-pro-preview');
+      setModel('gemini-2.5-flash');
     }
   };
 
@@ -79,7 +79,7 @@ const AIAssistant = () => {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-3xl font-bold text-white mb-2" style={{ fontFamily: 'Cairo' }} data-testid="ai-assistant-heading">
-                  المساعد القانوني
+                  Manus AI القانوني
                 </h1>
                 <p className="text-gray-400">مساعد ذكي متخصص في القانون الإماراتي</p>
               </div>
@@ -90,8 +90,8 @@ const AIAssistant = () => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-[#111827] border-white/10">
-                    <SelectItem value="openai">OpenAI GPT-5.2</SelectItem>
-                    <SelectItem value="gemini">Gemini 3 Pro</SelectItem>
+                    <SelectItem value="openai">OpenAI GPT-4.1-mini</SelectItem>
+                    <SelectItem value="gemini">Gemini 2.5 Flash</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -104,7 +104,7 @@ const AIAssistant = () => {
                 <div className="text-center">
                   <Bot className="w-16 h-16 text-[#D4AF37] mx-auto mb-4" />
                   <h2 className="text-xl font-semibold text-white mb-2" style={{ fontFamily: 'Cairo' }}>
-                    مرحباً بك في المساعد القانوني
+                    مرحباً بك في Manus AI القانوني
                   </h2>
                   <p className="text-gray-400 max-w-md mx-auto">
                     أنا مساعد قانوني متخصص في القانون الإماراتي. يمكنني مساعدتك في البحث عن المواد القانونية وصياغة المذكرات

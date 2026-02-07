@@ -53,7 +53,7 @@ const Register = () => {
           <div className="flex items-center gap-3 mb-8 justify-center">
             <Scale className="w-10 h-10 text-[#D4AF37]" />
             <h2 className="text-3xl font-bold text-white" style={{ fontFamily: 'Cairo' }}>
-              LegalCore
+              KM Legal System
             </h2>
           </div>
 

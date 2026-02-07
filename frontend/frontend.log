@@ -1,0 +1,40 @@
+yarn run v1.22.22
+$ craco start
+(node:22892) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:22892) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+Starting the development server...
+
+Compiled with warnings.
+
+[eslint] 
+src/pages/CaseDetails.js
+  Line 100:6:  React Hook useEffect has a missing dependency: 'fetchSessions'. Either include it or remove the dependency array   react-hooks/exhaustive-deps
+  Line 328:6:  React Hook useEffect has a missing dependency: 'fetchDocuments'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 397:6:  React Hook useEffect has a missing dependency: 'fetchInvoices'. Either include it or remove the dependency array   react-hooks/exhaustive-deps
+  Line 492:6:  React Hook useEffect has a missing dependency: 'fetchCase'. Either include it or remove the dependency array       react-hooks/exhaustive-deps
+
+src/pages/InvoiceDetails.js
+  Line 42:6:  React Hook useEffect has missing dependencies: 'fetchInvoice' and 'fetchPayments'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/pages/CaseDetails.js
+  Line 100:6:  React Hook useEffect has a missing dependency: 'fetchSessions'. Either include it or remove the dependency array   react-hooks/exhaustive-deps
+  Line 328:6:  React Hook useEffect has a missing dependency: 'fetchDocuments'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 397:6:  React Hook useEffect has a missing dependency: 'fetchInvoices'. Either include it or remove the dependency array   react-hooks/exhaustive-deps
+  Line 492:6:  React Hook useEffect has a missing dependency: 'fetchCase'. Either include it or remove the dependency array       react-hooks/exhaustive-deps
+
+src/pages/InvoiceDetails.js
+  Line 42:6:  React Hook useEffect has missing dependencies: 'fetchInvoice' and 'fetchPayments'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+
+                    The build failed because the process exited too early.
+                    This probably means the system ran out of memory or someone called
+                    `kill -9` on the process.
+                
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

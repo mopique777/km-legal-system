@@ -42,7 +42,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           )}
           <div>
             <h2 className="text-xl font-bold text-white" style={{ fontFamily: 'Cairo' }}>
-              {company?.name_ar || 'LegalCore'}
+              {company?.name_ar || 'KM Legal System'}
             </h2>
             {company?.name_en && (
               <p className="text-xs text-gray-400" style={{ fontFamily: 'Manrope' }}>

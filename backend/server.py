@@ -19,7 +19,7 @@ from PIL import Image
 from pdf2image import convert_from_path
 import tempfile
 import io
-from emergentintegrations.llm.chat import LlmChat, UserMessage
+from manus_ai_integration import LlmChat, UserMessage
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 from google_auth_oauthlib.flow import Flow
@@ -36,10 +36,10 @@ db = client[os.environ['DB_NAME']]
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
 security = HTTPBearer()
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["sha256_crypt"], deprecated="auto")
 logger = logging.getLogger(__name__)
 
-UPLOAD_DIR = Path("/app/uploads")
+UPLOAD_DIR = ROOT_DIR / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
 
 class User(BaseModel):
@@ -248,7 +248,9 @@ async def register(user_data: UserCreate):
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
     
-    password_hash = pwd_context.hash(user_data.password)
+    # Truncate password to 72 bytes for bcrypt compatibility
+    password_to_hash = user_data.password.encode('utf-8')[:72].decode('utf-8', 'ignore')
+    password_hash = pwd_context.hash(password_to_hash)
     user = User(
         email=user_data.email,
         password_hash=password_hash,
@@ -634,8 +636,8 @@ async def ai_chat(request: AIRequest, user: User = Depends(get_current_user)):
         elif request.provider == "gemini" and keys_doc and keys_doc.get("gemini_key"):
             api_key = keys_doc.get("gemini_key")
         else:
-            # Fallback to Emergent LLM Key
-            api_key = os.getenv("EMERGENT_LLM_KEY")
+            # Fallback to Manus AI Key
+            api_key = os.getenv("MANUS_AI_KEY")
         
         system_message = """
 أنت مساعد قانوني متخصص في القانون الإماراتي. يجب عليك:
@@ -821,7 +823,7 @@ async def save_api_keys(keys_data: dict, user: User = Depends(get_current_user))
     if not update_data:
         # لا توجد مفاتيح للحفظ - حذف المفاتيح القديمة إن وجدت
         await db.api_keys.delete_one({"user_id": user.id})
-        return {"message": "No keys to save, will use Emergent LLM Key"}
+        return {"message": "No keys to save, will use Manus AI Key"}
     
     update_data["user_id"] = user.id
     update_data["updated_at"] = datetime.now(timezone.utc).isoformat()
@@ -852,3 +854,6 @@ logging.basicConfig(
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

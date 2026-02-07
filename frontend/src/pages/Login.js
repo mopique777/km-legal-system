@@ -39,7 +39,7 @@ const Login = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-transparent" />
         <div className="absolute bottom-12 right-12 text-white">
           <h1 className="text-5xl font-bold mb-4" style={{ fontFamily: 'Cairo' }}>
-            LegalCore
+            KM Legal System
           </h1>
           <p className="text-xl text-gray-200">نظام إدارة قانوني احترافي</p>
         </div>
@@ -50,7 +50,7 @@ const Login = () => {
           <div className="flex items-center gap-3 mb-8 justify-center">
             <Scale className="w-10 h-10 text-[#D4AF37]" />
             <h2 className="text-3xl font-bold text-white" style={{ fontFamily: 'Cairo' }}>
-              LegalCore
+              KM Legal System
             </h2>
           </div>
 
